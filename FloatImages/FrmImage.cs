@@ -34,7 +34,6 @@ namespace FloatImages
         public FrmImage(string path, FrmPrincipal frmPrincipal, Point initialPlace)
         {
             InitializeComponent();
-            this.FormBorderStyle = FormBorderStyle.None;
             imgContainer.Load(path);
             imgContainer.Invalidate();
 
