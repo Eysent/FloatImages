@@ -94,8 +94,8 @@ namespace FloatImages
                     //update info label
                     lblStatus.Text = string.Format("Openned images: {0}", ++totalOpenedImages);
                 }
-
-                frmPrint = null;
+                
+               frmPrint = null;
             }
         }
 
@@ -169,6 +169,12 @@ namespace FloatImages
         private void tsExit_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void ckbNoTitleBar_CheckedChanged(object sender, EventArgs e)
+        {
+            //frmImagesList.ForEach(frm => frm.FormBorderStyle = (sender as CheckBox).Checked ? FormBorderStyle.None : FormBorderStyle.FixedToolWindow);
+            //frmImagesList.ForEach(frm => frm.ControlBox = (sender as CheckBox).Checked );
         }
 
         #region Monitoring

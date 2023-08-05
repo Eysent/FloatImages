@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
 
 namespace FloatImages
 {
@@ -16,23 +20,26 @@ namespace FloatImages
         public FrmPrint(FrmPrincipal frmPrincipal)
         {
             InitializeComponent();
-
-            DoubleBuffered = true;
             SetStyle(ControlStyles.ResizeRedraw, true);
-
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             ownPrincipal = frmPrincipal;
         }
 
+
         private void frmPrint_Load(object sender, EventArgs e)
         {
+            
             Width = Screen.AllScreens.Sum(screen => screen.WorkingArea.Width) + 200;
             Height = Screen.AllScreens.Sum(screen => screen.WorkingArea.Height) + 200;
-            Top =  Screen.AllScreens.Min(screen => screen.WorkingArea.Top);
+            Top = Screen.AllScreens.Min(screen => screen.WorkingArea.Top);
             Left = Screen.AllScreens.Min(screen => screen.WorkingArea.Left);
             BackColor = Color.White;
             TransparencyKey = Color.Blue;
             FormBorderStyle = FormBorderStyle.None;
             Opacity = .30;
+
+            WindowState = FormWindowState.Maximized;
+            Bounds = Screen.PrimaryScreen.Bounds;
         }
 
         private void frmPrint_Paint(object sender, PaintEventArgs e)
@@ -48,18 +55,11 @@ namespace FloatImages
         {
             if (e.Button == MouseButtons.Left)
             {
-                var width = e.X - init.X;
-                var height = e.Y - init.Y;
-                mRect = new Rectangle(width >= 0 ? init.X : e.X, height >= 0 ? init.Y : e.Y, Math.Abs(width), Math.Abs(height));
-
-                ownPrincipal.lblInfo.Text = $"e.X = {e.X}, " +
-                                            $"e.Y = {e.Y}, " +
-                                            $"init.X = {init.X}, " +
-                                            $"init.Y = {init.Y}, " +
-                                            $"mRect.Left = {mRect.Left}, " +
-                                            $"mRect.Top = {mRect.Top}, " +
-                                            $"width {width}, " +
-                                            $"height: {height}";
+                
+                Point mousePos = Control.MousePosition;
+                var width = mousePos.X - init.X;
+                var height = mousePos.Y - init.Y;
+                mRect = new Rectangle(width >= 0 ? init.X : mousePos.X, height >= 0 ? init.Y : mousePos.Y, Math.Abs(width), Math.Abs(height));
 
                 Invalidate();
             }
@@ -104,6 +104,9 @@ namespace FloatImages
                 ownPrincipal.pointSource = null;
                 ownPrincipal.pointTarget     = null;
             }
+           
         }
+
+
     }    
 }

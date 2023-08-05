@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace FloatImages
 {
@@ -47,9 +49,10 @@ namespace FloatImages
             // 
             this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("Arial Black", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatus.Location = new System.Drawing.Point(56, 16);
+            this.lblStatus.Location = new System.Drawing.Point(75, 18);
+            this.lblStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(120, 15);
+            this.lblStatus.Size = new System.Drawing.Size(154, 19);
             this.lblStatus.TabIndex = 0;
             this.lblStatus.Text = "Openned images: 0";
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -66,16 +69,17 @@ namespace FloatImages
             // 
             // cmIcon
             // 
+            this.cmIcon.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.cmIcon.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsExit});
             this.cmIcon.Name = "cmMain";
-            this.cmIcon.Size = new System.Drawing.Size(94, 26);
+            this.cmIcon.Size = new System.Drawing.Size(105, 28);
             this.cmIcon.Text = "Menu";
             // 
             // tsExit
             // 
             this.tsExit.Name = "tsExit";
-            this.tsExit.Size = new System.Drawing.Size(93, 22);
+            this.tsExit.Size = new System.Drawing.Size(104, 24);
             this.tsExit.Text = "Exit";
             this.tsExit.Click += new System.EventHandler(this.tsExit_Click);
             // 
@@ -84,9 +88,10 @@ namespace FloatImages
             this.ckbShowImagesTaskbar.AutoSize = true;
             this.ckbShowImagesTaskbar.Checked = true;
             this.ckbShowImagesTaskbar.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckbShowImagesTaskbar.Location = new System.Drawing.Point(12, 50);
+            this.ckbShowImagesTaskbar.Location = new System.Drawing.Point(16, 58);
+            this.ckbShowImagesTaskbar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.ckbShowImagesTaskbar.Name = "ckbShowImagesTaskbar";
-            this.ckbShowImagesTaskbar.Size = new System.Drawing.Size(165, 17);
+            this.ckbShowImagesTaskbar.Size = new System.Drawing.Size(245, 19);
             this.ckbShowImagesTaskbar.TabIndex = 1;
             this.ckbShowImagesTaskbar.Text = "Show image icons on taskbar";
             this.ckbShowImagesTaskbar.UseVisualStyleBackColor = true;
@@ -95,18 +100,19 @@ namespace FloatImages
             // lblInfo
             // 
             this.lblInfo.AutoSize = true;
-            this.lblInfo.Location = new System.Drawing.Point(8, 2);
+            this.lblInfo.Location = new System.Drawing.Point(11, 2);
+            this.lblInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblInfo.Name = "lblInfo";
-            this.lblInfo.Size = new System.Drawing.Size(14, 13);
+            this.lblInfo.Size = new System.Drawing.Size(0, 15);
             this.lblInfo.TabIndex = 2;
-            this.lblInfo.Text = "X";
             this.lblInfo.Visible = false;
             // 
             // btnCloseAllImages
             // 
-            this.btnCloseAllImages.Location = new System.Drawing.Point(30, 109);
+            this.btnCloseAllImages.Location = new System.Drawing.Point(37, 110);
+            this.btnCloseAllImages.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnCloseAllImages.Name = "btnCloseAllImages";
-            this.btnCloseAllImages.Size = new System.Drawing.Size(168, 23);
+            this.btnCloseAllImages.Size = new System.Drawing.Size(224, 27);
             this.btnCloseAllImages.TabIndex = 3;
             this.btnCloseAllImages.Text = "Close all images";
             this.btnCloseAllImages.UseVisualStyleBackColor = true;
@@ -115,18 +121,19 @@ namespace FloatImages
             // ckbForceTitle
             // 
             this.ckbForceTitle.AutoSize = true;
-            this.ckbForceTitle.Location = new System.Drawing.Point(12, 74);
+            this.ckbForceTitle.Location = new System.Drawing.Point(16, 85);
+            this.ckbForceTitle.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.ckbForceTitle.Name = "ckbForceTitle";
-            this.ckbForceTitle.Size = new System.Drawing.Size(212, 17);
+            this.ckbForceTitle.Size = new System.Drawing.Size(117, 19);
             this.ckbForceTitle.TabIndex = 4;
-            this.ckbForceTitle.Text = "On create an image, force to type a title";
+            this.ckbForceTitle.Text = "Image title";
             this.ckbForceTitle.UseVisualStyleBackColor = true;
             // 
             // FrmPrincipal
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(229, 140);
+            this.ClientSize = new System.Drawing.Size(286, 160);
             this.Controls.Add(this.ckbForceTitle);
             this.Controls.Add(this.btnCloseAllImages);
             this.Controls.Add(this.lblInfo);
@@ -134,6 +141,7 @@ namespace FloatImages
             this.Controls.Add(this.lblStatus);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MaximizeBox = false;
             this.Name = "FrmPrincipal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -146,6 +154,7 @@ namespace FloatImages
             this.PerformLayout();
 
         }
+
 
         #endregion
 

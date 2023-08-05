@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -32,6 +34,7 @@ namespace FloatImages
         public FrmImage(string path, FrmPrincipal frmPrincipal, Point initialPlace)
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.None;
             imgContainer.Load(path);
             imgContainer.Invalidate();
 
@@ -58,7 +61,8 @@ namespace FloatImages
             mainForm.lblStatus.Text = string.Format("Openned images: {0}", --mainForm.totalOpenedImages);
 
             //Remove itself from closing control main form list
-            mainForm.frmImagesList.Remove(this);            
+            mainForm.frmImagesList.Remove(this);
+
         }
 
         private void FrmImage_KeyDown(object sender, KeyEventArgs e)
