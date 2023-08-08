@@ -121,6 +121,8 @@ namespace FloatImages
             // ckbForceTitle
             // 
             this.ckbForceTitle.AutoSize = true;
+            this.ckbForceTitle.Checked = true;
+            this.ckbForceTitle.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckbForceTitle.Location = new System.Drawing.Point(16, 85);
             this.ckbForceTitle.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.ckbForceTitle.Name = "ckbForceTitle";

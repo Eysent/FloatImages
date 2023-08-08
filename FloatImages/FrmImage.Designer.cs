@@ -37,6 +37,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.imgContainer)).BeginInit();
             this.ctxImgForm.SuspendLayout();
             this.SuspendLayout();
+            this.TopMost = true;
             // 
             // imgContainer
             // 
@@ -61,7 +62,7 @@
             // 
             this.setFormTitleToolStripMenuItem.Name = "setFormTitleToolStripMenuItem";
             this.setFormTitleToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
-            this.setFormTitleToolStripMenuItem.Text = "Set form title...";
+            this.setFormTitleToolStripMenuItem.Text = "Close";
             this.setFormTitleToolStripMenuItem.Click += new System.EventHandler(this.setFormTitle);
             // 
             // svd
@@ -84,6 +85,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.imgContainer)).EndInit();
             this.ctxImgForm.ResumeLayout(false);
             this.ResumeLayout(false);
+
+            this.imgContainer.MouseDown += new System.Windows.Forms.MouseEventHandler(this.EventMouseDown);
+            this.imgContainer.MouseMove += new System.Windows.Forms.MouseEventHandler(this.EventMouseMove);
+            this.imgContainer.MouseUp += new System.Windows.Forms.MouseEventHandler(this.EventMouseUp);
+
 
         }
 

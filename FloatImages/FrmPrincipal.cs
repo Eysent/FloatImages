@@ -83,10 +83,6 @@ namespace FloatImages
                     var img = new FrmImage(imgPath, this, pointSource.Value);
                     img.Show();
 
-                    //Forces the current image form to have a title, provided by user.
-                    if (ckbForceTitle.Checked)
-                        img.setFormTitle(null, null);
-
                     //variables to control main close form action.
                     imageList.Add(imgPath);
                     frmImagesList.Add(img);
