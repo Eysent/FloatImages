@@ -71,7 +71,7 @@ namespace FloatImages
                         using (Graphics g = Graphics.FromImage(bitmap))                        
                             g.CopyFromScreen(X, Y, Point.Empty.X, Point.Empty.Y, rectImage.Value.Size, CopyPixelOperation.SourceCopy);                        
 
-                        imgPath = string.Concat(DateTime.Now.ToString("ddMMyyyyhhmmssfff"), ".bmp");
+                        imgPath = Path.Combine(Path.GetTempPath(), $"{DateTime.Now:ddMMyyyyhhmmssfff}.bmp");
                         bitmap.Save(imgPath, ImageFormat.Bmp);
                     }
                 }
@@ -153,13 +153,38 @@ namespace FloatImages
         /// <param name="e"></param>
         private void CloseAllImages(object sender, EventArgs e)
         {
-            //This clone is needed because on every close form method call, the FrmImage instance remove itself from imageList.
-            //If we don't do this, ever one form won't be closed.            
-            var cloneImageList = new List<FrmImage>();
-            cloneImageList.AddRange(frmImagesList);
+            // Clone the list to avoid modification during iteration
+            var cloneImageList = new List<FrmImage>(frmImagesList);
 
-            cloneImageList.ForEach(frm => frm.Close());
-            imageList.ForEach(image => File.Delete(image));
+            foreach (var frm in cloneImageList)
+            {
+                try
+                {
+                    frm.Close(); // Attempt to close the form
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception and continue
+                    //Debug.WriteLine($"Error closing form: {ex.Message}");
+                }
+            }
+
+            foreach (var image in new List<string>(imageList))
+            {
+                try
+                {
+                    if (File.Exists(image))
+                    {
+                        File.Delete(image); // Attempt to delete the file
+                    }
+                    imageList.Remove(image); // Remove from the list
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception and continue
+                    //Debug.WriteLine($"Error deleting file '{image}': {ex.Message}");
+                }
+            }
         }
 
         private void tsExit_Click(object sender, EventArgs e)

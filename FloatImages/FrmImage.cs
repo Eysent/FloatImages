@@ -16,6 +16,8 @@ namespace FloatImages
 {
     public partial class FrmImage : Form
     {
+        private const int WM_MOUSEWHEEL = 0x020A;
+
         /// <summary>
         /// Main form of application.
         /// </summary>
@@ -27,6 +29,8 @@ namespace FloatImages
         public string ownPath;
         bool formMove = false;//窗体是否移动
         Point formPoint;//记录窗体的位置
+        private Image originalImage; // Store the original image
+
         public FrmImage()
         {
             InitializeComponent();
@@ -34,9 +38,16 @@ namespace FloatImages
 
         public FrmImage(string path, FrmPrincipal frmPrincipal, Point initialPlace)
         {
-            int widthBias = 0, heightBias = 0;
             InitializeComponent();
             mainForm = frmPrincipal;
+
+            // Load the original image
+            originalImage = Image.FromFile(path);
+
+            // Set the initial image in the PictureBox
+            imgContainer.Image = (Image)originalImage.Clone();
+
+            int widthBias = 0, heightBias = 0;
             if (mainForm.ckbForceTitle.Checked)
             {
                 this.FormBorderStyle = FormBorderStyle.None;
@@ -50,8 +61,6 @@ namespace FloatImages
             imgContainer.Load(path);
             imgContainer.Invalidate();
 
-            
-
             Width = imgContainer.PreferredSize.Width + widthBias; //required for form border does not cover a litle image border part.
             Height = imgContainer.PreferredSize.Height + heightBias; //required for form border does not cover a litle image border part.
 
@@ -62,12 +71,27 @@ namespace FloatImages
             imgContainer.Left = 0;
             imgContainer.Height += 1;
 
-            
             ownPath = path;
         }
 
         private void FrmImage_FormClosing(object sender, FormClosingEventArgs e)
         {
+            this.imgContainer.MouseClick -= this.imgContainer_MouseClick;
+            this.FormClosing -= this.FrmImage_FormClosing;
+            this.KeyDown -= this.FrmImage_KeyDown;
+
+            if (imgContainer.Image != null)
+            {
+                imgContainer.Image.Dispose();
+                imgContainer.Image = null;
+            }
+
+            if (originalImage != null)
+            {
+                originalImage.Dispose();
+                originalImage = null;
+            }
+
             mainForm.imgPath = ownPath;
 
             imgContainer = null;       
@@ -141,5 +165,109 @@ namespace FloatImages
             }
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            // Handle mouse wheel event
+            if (m.Msg == WM_MOUSEWHEEL)
+            {
+                // Check if this is the active form and mouse is over this form
+                if (Form.ActiveForm == this && this.Bounds.Contains(Cursor.Position))
+                {
+                    int delta = (short)((m.WParam.ToInt32() >> 16) & 0xFFFF); // Get scroll delta
+                    HandleMouseWheel(delta);
+                }
+            }
+
+            base.WndProc(ref m);
+        }
+
+        private void HandleMouseWheel(int delta)
+        {
+            // Determine initial zoom factor based on scroll direction
+            float zoomFactor = delta > 0 ? 1.1f : 0.9f;
+
+            // Calculate new size for the form
+            int newWidth = (int)(this.Width * zoomFactor);
+            int newHeight = (int)(this.Height * zoomFactor);
+
+            // Get the aspect ratio of the original image
+            float imageAspectRatio = (float)originalImage.Width / originalImage.Height;
+
+            // Adjust the zoom factor to ensure no black/white borders
+            float containerAspectRatio = (float)newWidth / newHeight;
+            if (containerAspectRatio > imageAspectRatio)
+            {
+                // Container is wider than the image, adjust width
+                newWidth = (int)(newHeight * imageAspectRatio);
+            }
+            else
+            {
+                // Container is taller than the image, adjust height
+                newHeight = (int)(newWidth / imageAspectRatio);
+            }
+
+            // Ensure minimum size to avoid disappearing window
+            if (newWidth < 100 || newHeight < 100)
+                return;
+
+            // Adjust location to keep mouse pointer at the same relative position
+            Point mousePos = Cursor.Position;
+            int offsetX = mousePos.X - this.Left;
+            int offsetY = mousePos.Y - this.Top;
+
+            this.Width = newWidth;
+            this.Height = newHeight;
+
+            this.Left = mousePos.X - (int)(offsetX * zoomFactor);
+            this.Top = mousePos.Y - (int)(offsetY * zoomFactor);
+
+            // Adjust the image in the PictureBox
+            AdjustImageToFit();
+        }
+
+        private void AdjustImageToFit()
+        {
+            if (originalImage == null)
+                return;
+
+            // Get the aspect ratio of the original image
+            float imageAspectRatio = (float)originalImage.Width / originalImage.Height;
+            float containerAspectRatio = (float)this.ClientSize.Width / this.ClientSize.Height;
+
+            // Create a new bitmap to hold the resized image
+            Bitmap resizedImage = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
+
+            using (Graphics g = Graphics.FromImage(resizedImage))
+            {
+                g.Clear(Color.Black); // Fill background to avoid white borders
+
+                if (imageAspectRatio > containerAspectRatio)
+                {
+                    // Image is wider than the container, adjust height
+                    int targetHeight = (int)(this.ClientSize.Width / imageAspectRatio);
+                    int offsetY = (this.ClientSize.Height - targetHeight) / 2;
+
+                    g.DrawImage(originalImage, 0, offsetY, this.ClientSize.Width, targetHeight);
+                }
+                else
+                {
+                    // Image is taller than the container, adjust width
+                    int targetWidth = (int)(this.ClientSize.Height * imageAspectRatio);
+                    int offsetX = (this.ClientSize.Width - targetWidth) / 2;
+
+                    g.DrawImage(originalImage, offsetX, 0, targetWidth, this.ClientSize.Height);
+                }
+            }
+
+            // Dispose of the old image in the PictureBox to free memory
+            if (imgContainer.Image != null)
+            {
+                imgContainer.Image.Dispose();
+                imgContainer.Image = null;
+            }
+
+            // Update the PictureBox with the resized image
+            imgContainer.Image = resizedImage;
+        }
     }
 }
